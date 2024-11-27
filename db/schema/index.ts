@@ -1,1 +1,2 @@
-export { default as user } from './user';
+import user from './user';
+export { user };
