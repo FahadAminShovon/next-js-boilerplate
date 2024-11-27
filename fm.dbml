@@ -1,0 +1,13 @@
+Table "drizzle"."__drizzle_migrations" {
+  "id" int4 [pk, not null, increment]
+  "hash" text [not null]
+  "created_at" int8
+}
+
+Table "user" {
+  "id" int4 [pk, not null, increment]
+  "username" varchar(20) [unique, not null]
+  "email" varchar(100) [unique, not null]
+  "createdAt" timestamp [not null, default: `now()`]
+  "updatedAt" timestamp
+}
