@@ -1,10 +1,11 @@
 'use client';
+import { Alert } from '@/components/custom/Alert';
 import { FormInput } from '@/components/hook-form-components';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { type InsertUserSchemaType, insertUserSchema } from '@/db/schema/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useActionState, useRef, useTransition } from 'react';
+import React, { useActionState, useEffect, useRef, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { signupAction } from './actions';
 
@@ -38,7 +39,6 @@ const SignupForm = () => {
 
   return (
     <Form {...form}>
-      <div>{state.message}</div>
       <form
         ref={formRef}
         className="space-y-8"
@@ -57,6 +57,9 @@ const SignupForm = () => {
         <Button type="submit" disabled={isPending}>
           Sign Up
         </Button>
+        {state.message && !state.user && (
+          <Alert variant={'destructive'} title={state.message} />
+        )}
       </form>
     </Form>
   );

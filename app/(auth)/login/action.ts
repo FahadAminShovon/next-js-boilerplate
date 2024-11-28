@@ -51,7 +51,7 @@ async function loginAction(
   }
 
   return {
-    message: 'User login failed',
+    message: 'Bad request',
     issues: parsed?.error?.issues.map((issue) => issue.message),
   };
 }

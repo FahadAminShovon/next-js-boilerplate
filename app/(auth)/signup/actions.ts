@@ -2,12 +2,12 @@
 
 import { db } from '@/db';
 import userTable, {
-  type SelectUserSchemaType,
   insertUserSchema,
   selectUserSchema,
 } from '@/db/schema/user';
 import { checkIfEmailExists } from '@/lib/server-validations';
 import bcrypt from 'bcrypt';
+import { createSession } from '../actions';
 import type { AuthActionFormState } from '../auth.types';
 
 async function signupAction(
@@ -19,6 +19,7 @@ async function signupAction(
 
   if (parsed.success) {
     const isValidEmail = await checkIfEmailExists(parsed.data.email);
+    console.log('isValidEmail', isValidEmail);
     if (!isValidEmail) {
       return {
         message: 'Email already taken',
@@ -38,6 +39,8 @@ async function signupAction(
         .insert(userTable)
         .values(parsedData)
         .returning();
+
+      await createSession({ userId: newUser.id });
       return {
         message: 'User registered successfully',
         user: selectUserSchema.parse(newUser),

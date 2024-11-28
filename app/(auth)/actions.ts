@@ -55,8 +55,6 @@ async function updateSession({ userId }: AuthCookiePayload) {
     password: env.SESSION_SECRET,
   });
 
-  console.log('updateSession userId: ', userId);
-
   session.userId = userId;
   await session.save();
 }
