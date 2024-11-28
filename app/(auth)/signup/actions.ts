@@ -8,17 +8,12 @@ import userTable, {
 } from '@/db/schema/user';
 import { checkIfEmailExists } from '@/lib/server-validations';
 import bcrypt from 'bcrypt';
-
-type FormState = {
-  message: string;
-  user?: SelectUserSchemaType;
-  issues?: string[];
-};
+import type { AuthActionFormState } from '../auth.types';
 
 async function signupAction(
-  _prevState: FormState,
+  _prevState: AuthActionFormState,
   formData: FormData,
-): Promise<FormState> {
+): Promise<AuthActionFormState> {
   const data = Object.fromEntries(formData.entries());
   const parsed = await insertUserSchema.safeParse(data);
 

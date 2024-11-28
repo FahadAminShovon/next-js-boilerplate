@@ -21,7 +21,12 @@ const insertUserSchema = createInsertSchema(user, {
   firstName: z.string().min(1).max(50).trim(),
   lastName: z.string().min(1).max(50).trim(),
   username: z.string().min(1).max(20).trim(),
-  email: z.string().min(1).email().trim(),
+  email: z
+    .string()
+    .min(1)
+    .email()
+    .trim()
+    .transform((v) => v.toLowerCase()),
 })
   .omit({
     id: true,
@@ -42,10 +47,21 @@ const selectUserSchema = createSelectSchema(user).omit({
   password: true,
 });
 
+const signinUserSchema = createSelectSchema(user, {
+  email: z
+    .string()
+    .email()
+    .trim()
+    .transform((v) => v.toLowerCase()),
+}).pick({
+  email: true,
+  password: true,
+});
+
 type InsertUserSchemaType = z.infer<typeof insertUserSchema>;
 type SelectUserSchemaType = z.infer<typeof selectUserSchema>;
 
-export { insertUserSchema, selectUserSchema };
+export { insertUserSchema, selectUserSchema, signinUserSchema };
 
 export type { InsertUserSchemaType, SelectUserSchemaType };
 

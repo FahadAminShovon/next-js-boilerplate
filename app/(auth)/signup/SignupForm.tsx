@@ -54,7 +54,9 @@ const SignupForm = () => {
           name="confirmPassword"
           label="Confirm Password"
         />
-        <Button type="submit">Sign Up</Button>
+        <Button type="submit" disabled={isPending}>
+          Sign Up
+        </Button>
       </form>
     </Form>
   );
