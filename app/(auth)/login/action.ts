@@ -3,6 +3,7 @@
 import { db } from '@/db';
 import { selectUserSchema, signinUserSchema } from '@/db/schema/user';
 import bcrypt from 'bcrypt';
+import { createSession } from '../actions';
 import type { AuthActionFormState } from '../auth.types';
 
 async function loginAction(
@@ -29,12 +30,11 @@ async function loginAction(
         user.password,
       );
 
-      console.log('isValidPassword', isValidPassword);
-
       if (!isValidPassword) {
         throw new Error('Invalid email or password');
       }
 
+      await createSession({ userId: user.id });
       return {
         message: 'User logged in successfully',
         user: selectUserSchema.parse(user),

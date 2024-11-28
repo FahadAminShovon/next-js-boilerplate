@@ -6,6 +6,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     DB_MIGRATING: z.boolean().optional().default(false),
     DB_SEEDING: z.boolean().optional().default(false),
+    SESSION_SECRET: z.string().min(32),
   },
   experimental__runtimeEnv: {},
 });
