@@ -49,6 +49,18 @@ async function destroySession() {
   await session.destroy();
 }
 
+async function updateSession({ userId }: AuthCookiePayload) {
+  const session = await getIronSession<AuthCookiePayload>(await cookies(), {
+    cookieName: AUTH_COOKIE_NAME,
+    password: env.SESSION_SECRET,
+  });
+
+  console.log('updateSession userId: ', userId);
+
+  session.userId = userId;
+  await session.save();
+}
+
 const getUser = cache(async () => {
   const session = await getUserSession();
   if (session) {
@@ -84,4 +96,11 @@ async function logoutAndRedirect() {
   redirect('/login');
 }
 
-export { createSession, logOut, requireUser, getUser, logoutAndRedirect };
+export {
+  createSession,
+  logOut,
+  requireUser,
+  getUser,
+  logoutAndRedirect,
+  updateSession,
+};
