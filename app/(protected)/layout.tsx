@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { requireUser } from '../(auth)/actions';
+import { getUser, logOut } from '../(auth)/actions';
 import AuthProvider from '../(auth)/provider/AuthProvider';
 
 export default async function ProtectedLayout({
@@ -7,7 +7,10 @@ export default async function ProtectedLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const asyncUser = requireUser();
+  const asyncUser = getUser().catch(() => {
+    logOut();
+    return null;
+  });
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <AuthProvider asyncUser={asyncUser}>{children}</AuthProvider>

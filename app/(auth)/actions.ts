@@ -1,10 +1,12 @@
 'use server';
 
 import { db } from '@/db';
+import { selectUserSchema } from '@/db/schema/user';
 import { env } from '@/env';
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
 
 const AUTH_COOKIE_NAME = 'auth_cookie';
 const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 1 week
@@ -47,7 +49,7 @@ async function destroySession() {
   await session.destroy();
 }
 
-async function getUser() {
+const getUser = cache(async () => {
   const session = await getUserSession();
   if (session) {
     const user = await db.query.user.findFirst({
@@ -57,19 +59,12 @@ async function getUser() {
     });
 
     if (user) {
-      return user;
+      return selectUserSchema.parse(user);
     }
-    throw new Error('User not found');
+    return null;
   }
-  throw new Error('User not found');
-}
-
-async function requireAnonymous() {
-  const session = await getUserSession();
-  if (session.userId) {
-    redirect('/dashboard');
-  }
-}
+  return null;
+});
 
 async function requireUser() {
   const session = await getUserSession();
@@ -82,7 +77,11 @@ async function requireUser() {
 
 async function logOut() {
   await destroySession();
+}
+
+async function logoutAndRedirect() {
+  await logOut();
   redirect('/login');
 }
 
-export { createSession, logOut, requireAnonymous, requireUser };
+export { createSession, logOut, requireUser, getUser, logoutAndRedirect };

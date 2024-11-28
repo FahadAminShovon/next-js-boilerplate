@@ -1,11 +1,17 @@
 import { Suspense } from 'react';
-import { requireAnonymous } from '../(auth)/actions';
+import { getUser } from './actions';
+import AnonymousProvider from './provider/AnonymousProvider';
 
 export default async function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await requireAnonymous();
-  return <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>;
+  const asyncUser = getUser();
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AnonymousProvider asyncUser={asyncUser}>{children}</AnonymousProvider>
+    </Suspense>
+  );
 }

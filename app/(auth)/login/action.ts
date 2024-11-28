@@ -3,6 +3,7 @@
 import { db } from '@/db';
 import { selectUserSchema, signinUserSchema } from '@/db/schema/user';
 import bcrypt from 'bcrypt';
+import { redirect } from 'next/navigation';
 import { createSession } from '../actions';
 import type { AuthActionFormState } from '../auth.types';
 
